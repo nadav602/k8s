@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-api
+  labels:
+    app: todo-api
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app: todo-api
+  template:
+    metadata:
+      labels:
+        app: todo-api
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.35
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c']
+          args:
+          - |
+            echo "Waiting for database (backend) to be available..."
+            # שימוש בשם השירות החדש שקבענו
+            until nc -z backend 3306; do
+              echo "Database not ready, waiting..."
+              sleep 3
+            done
+            echo "Database is ready!"
+      containers:
+        - name: todo-api
+          image: ghcr.io/bennyro-mta/todos-api:1.2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: todolist-config
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todolist-secret
+                  key: MYSQL_ROOT_PASSWORD
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 3

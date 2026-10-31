@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todolist-config
+data:
+  MYSQL_DB: "todo"
+  MYSQL_HOST: {{ .Values.env.mysqlHost | quote }}
+  MYSQL_USER: "root"
+  MYSQL_TABLE: "todos"
+  USER: {{ .Values.env.user | quote }}

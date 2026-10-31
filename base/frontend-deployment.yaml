@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.35
+          imagePullPolicy: IfNotPresent
+          command: ['sh', '-c']
+          args:
+          - |
+            echo "Waiting for database port to be available..."
+            sleep 5
+            until nc -z $MYSQL_HOST 3306; do
+              echo "Database port not ready, waiting..."
+              sleep 3
+            done
+            echo "Database port is ready!"
+          envFrom:
+          - configMapRef:
+              name: todolist-config   
+      containers:
+      - name: frontend
+        image: ghcr.io/bennyro-mta/todolist:1.10
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5000
+        envFrom:
+          - configMapRef:
+              name: todolist-config
+          - secretRef:
+              name: todolist-secret
+        env:
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: todolist-secret
+                key: MYSQL_ROOT_PASSWORD
+          - name: LOG_LEVEL
+            value: "INFO" # Added a dummy value for the env var
+        resources: # <--- Fixed alignment
+          requests:
+            cpu: "50m"
+            memory: "64Mi"

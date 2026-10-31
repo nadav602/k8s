@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todolist-vue
+  labels:
+    app: todolist-vue
+spec:
+  replicas: {{ .Values.vue.replicaCount }}
+  selector:
+    matchLabels:
+      app: todolist-vue
+  template:
+    metadata:
+      labels:
+        app: todolist-vue
+    spec:
+      initContainers:
+        - name: wait-for-api
+          image: busybox:1.35
+          command: ['sh', '-c', 'until nc -z todo-api 8080; do echo waiting for api; sleep 2; done']
+      containers:
+        - name: todolist-vue
+          image: ghcr.io/bennyro-mta/todolist-vue:1.2
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            {{- toYaml .Values.vue.resources | nindent 12 }}
+          envFrom:
+            - configMapRef:
+                name: todolist-vue-config
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5

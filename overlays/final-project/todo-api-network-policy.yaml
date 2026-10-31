@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: todo-api-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: todo-api 
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: todolist-vue 
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: traefik 
+    ports:
+    - protocol: TCP
+      port: 8080

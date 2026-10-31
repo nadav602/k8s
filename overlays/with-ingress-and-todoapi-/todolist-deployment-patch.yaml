@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  template:
+    spec:
+      containers:
+      - name: frontend
+        image: ghcr.io/bennyro-mta/todolist:1.10
+        env:
+        - name: USER
+          valueFrom:
+            configMapKeyRef:
+              name: todolist-config
+              key: USER
+        - name: API_BASE_URL   # <--- ADD THIS BLOCK
+          valueFrom:
+            configMapKeyRef:
+              name: todolist-config
+              key: API_BASE_URL
+        - name: MYSQL_TABLE
+          valueFrom:
+            configMapKeyRef:
+              name: todolist-config
+              key: MYSQL_TABLE

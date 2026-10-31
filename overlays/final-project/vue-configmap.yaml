@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todolist-vue-config
+  labels:
+    app: todolist-vue
+data:
+  API_BASE_URL: "/todos"
+  USER: "Zonenshein-Nadav"

@@ -1,0 +1,22 @@
+Final project - Nadav Zonenshein ID 322214362
+===============================================================================
+    🚀 TodoList Application by Nadav is successfully deployed!
+===============================================================================
+
+CHART STATUS: Deployed
+USER:         {{ .Values.env.user }}
+
+FOLLOW THESE STEPS TO ACCESS THE APP:
+
+1. ENABLE ACCESS (MINIKUBE ONLY):
+   Open a separate terminal and run the tunnel to expose the LoadBalancers:
+   $ sudo -E minikube tunnel
+
+2. UPDATE YOUR HOSTS FILE:
+   Ensure 'todolist.local' points to your local machine. Run:
+   $ echo "127.0.0.1 todolist.local" | sudo tee -a /etc/hosts
+
+3. OPEN THE WEB INTERFACE:
+   Go to: http://todolist.local
+
+===============================================================================
