@@ -14,6 +14,8 @@ spec:
       labels:
         app: todo-api
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       initContainers:
         - name: wait-for-db
           image: busybox:1.35
