@@ -31,7 +31,7 @@ spec:
       containers:
         - name: todo-api
           image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               name: http
