@@ -30,6 +30,19 @@ spec:
               sleep 3
             done
             echo "Database is ready!"
+        - name: init-schema
+          image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
+          imagePullPolicy: IfNotPresent
+          command: ["/app/todos-api", "--init-schema"]
+          envFrom:
+            - configMapRef:
+                name: todolist-config
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: todolist-secret
+                  key: MYSQL_ROOT_PASSWORD
       containers:
         - name: todo-api
           image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
