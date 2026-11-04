@@ -2,7 +2,7 @@ env:
   user: "Zonenshein-Nadav"
   mysqlHost: "backend"
   apiBaseUrl: "/todos"
-  mysqlRootPassword: "thisIsASecret"
+
 
 api:
   replicaCount: 1
