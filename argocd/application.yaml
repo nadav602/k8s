@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: todolist
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nadav602/k8s.git
+    targetRevision: HEAD
+    path: todolist-chart
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
