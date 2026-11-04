@@ -2,13 +2,11 @@ env:
   user: "Zonenshein-Nadav"
   mysqlHost: "backend"
   apiBaseUrl: "/todos"
-
-
 api:
   replicaCount: 1
   image:
     repository: ghcr.io/nadav602/todos-api
-    tag: "1.2"
+    tag: "4454274"
   service:
     type: LoadBalancer
   resources:
@@ -18,14 +16,13 @@ api:
     limits:
       cpu: "200m"
       memory: "128Mi"
-
 vue:
   replicaCount: 1
   image:
     repository: ghcr.io/nadav602/todolist-vue
     tag: "1.2"
   service:
-    type: LoadBalancer 
+    type: LoadBalancer
   resources:
     requests:
       cpu: "100m"
@@ -36,7 +33,6 @@ vue:
 backend:
   image: mariadb
   tag: "latest"
-
 hpa:
   enabled: true
   minReplicas: 1
