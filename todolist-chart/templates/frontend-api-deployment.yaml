@@ -30,7 +30,7 @@ spec:
             echo "Database is ready!"
       containers:
         - name: todo-api
-          image: ghcr.io/bennyro-mta/todos-api:1.2
+          image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

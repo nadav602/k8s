@@ -20,7 +20,7 @@ spec:
           command: ['sh', '-c', 'until nc -z todo-api 8080; do echo waiting for api; sleep 2; done']
       containers:
         - name: todolist-vue
-          image: ghcr.io/bennyro-mta/todolist-vue:1.2
+          image: {{ .Values.vue.image.repository }}:{{ .Values.vue.image.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
